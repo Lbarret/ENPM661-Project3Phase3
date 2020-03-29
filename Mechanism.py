@@ -39,7 +39,7 @@ class Environment:
 
      # Check if node is in center cirlce
     def insideCircle1(self, position):
-        if (position[0] - 5.1) ** 2 + (position[1] - 5.1) ** 2 <= (2 + self.clearance) ** 2:
+        if (position[0] - 5.1) ** 2 + (position[1] - 5.1) ** 2 <= (1 + self.clearance) ** 2:
             return True
         else:
             return False
@@ -47,21 +47,21 @@ class Environment:
 
     # Check if node is in bottom left cirlce
     def insideCircle2(self, position):
-        if (position[0] - 3.1) ** 2 + (position[1] - 2.1) ** 2 <= (2 + self.clearance) ** 2:
+        if (position[0] - 3.1) ** 2 + (position[1] - 2.1) ** 2 <= (1 + self.clearance) ** 2:
             return True
         else:
             return False
 
     # Check if node is in bottom right cirlce
     def insideCircle3(self, position):
-        if (position[0] - 7.1) ** 2 + (position[1] - 2.1) ** 2 <= (2 + self.clearance) ** 2:
+        if (position[0] - 7.1) ** 2 + (position[1] - 2.1) ** 2 <= (1 + self.clearance) ** 2:
             return True
         else:
             return False
 
     # Check if node is in top right cirlce
     def insideCircle4(self, position):
-        if (position[0] - 7.1) ** 2 + (position[1] - 8.1) ** 2 <= (2 + self.clearance) ** 2:
+        if (position[0] - 7.1) ** 2 + (position[1] - 8.1) ** 2 <= (1 + self.clearance) ** 2:
             return True
         else:
             return False
