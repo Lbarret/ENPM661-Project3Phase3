@@ -3,17 +3,20 @@ from math import sqrt, cos, sin, radians, atan2, floor
 
 class Node:
     # Initialize
-    def __init__(self, start, env, goal, stepSize, parent=None):
+    def __init__(self, start, env, goal, stepSize, parent=None, action=None):
         self.env = env
         self.parent = parent
         self.goal = goal
+        self.action = action
+
         if parent is not None:
-            self.g = parent.g + stepSize
+            step = sqrt((env[0] - parent.env[0]) ** 2 + (env[1] - parent.env[1]) ** 2)
+            self.g = parent.g + step
         else:
             self.g = 0
         # Heuristic function
         self.weight = self.g + sqrt((env[0] - goal[0]) ** 2 + (env[1] - goal[1]) ** 2) + (
-                    (env[2] - floor(atan2((goal[1] - start[1]), (goal[0] - start[0])))) / 30) * (stepSize / 5)
+                (env[2] - floor(atan2((goal[1] - start[1]), (goal[0] - start[0])))) / 30)  # * (step / 5)
 
     # Solve for path from goal to start node
     def path(self):
@@ -37,62 +40,71 @@ class Environment:
         self.currentPosition = currentPosition
         self.clearance = clearance
 
-     # Check if node is in center cirlce
     def insideCircle1(self, position):
-        if (position[0] - 5.1) ** 2 + (position[1] - 5.1) ** 2 <= (1 + self.clearance) ** 2:
+        if (position[0] - 51) ** 2 + (position[1] - 51) ** 2 <= (10 + self.clearance) ** 2:
             return True
         else:
             return False
 
+        # Check if node is in bottom left cirlce
 
-    # Check if node is in bottom left cirlce
     def insideCircle2(self, position):
-        if (position[0] - 3.1) ** 2 + (position[1] - 2.1) ** 2 <= (1 + self.clearance) ** 2:
+        if (position[0] - 31) ** 2 + (position[1] - 21) ** 2 <= (10 + self.clearance) ** 2:
             return True
         else:
             return False
 
-    # Check if node is in bottom right cirlce
+        # Check if node is in bottom right cirlce
+
     def insideCircle3(self, position):
-        if (position[0] - 7.1) ** 2 + (position[1] - 2.1) ** 2 <= (1 + self.clearance) ** 2:
+        if (position[0] - 71) ** 2 + (position[1] - 21) ** 2 <= (10 + self.clearance) ** 2:
             return True
         else:
             return False
 
-    # Check if node is in top right cirlce
+        # Check if node is in top right cirlce
+
     def insideCircle4(self, position):
-        if (position[0] - 7.1) ** 2 + (position[1] - 8.1) ** 2 <= (1 + self.clearance) ** 2:
+        if (position[0] - 71) ** 2 + (position[1] - 81) ** 2 <= (10 + self.clearance) ** 2:
             return True
         else:
             return False
 
-    # Check if node is in top left square using half planes
+        # Check if node is in top left square using half planes
+
     def insideSquare1(self, position):
-        if position[0] > 2.35 - self.clearance and position[0] < 3.85 + self.clearance and position[1] < 8.85 + self.clearance and position[1] > 7.35 - self.clearance:
+        if position[0] > 23.5 - self.clearance and position[0] < 38.5 + self.clearance and position[
+            1] < 88.5 + self.clearance and position[1] > 73.5 - self.clearance:
             return True
         else:
             return False
 
-    # Check if node is in middle left square using half planes
+        # Check if node is in middle left square using half planes
+
     def insideSquare2(self, position):
-       if position[0] > .35 - self.clearance and position[0] < 1.85 + self.clearance and position[1] < 5.85 + self.clearance and position[1] > 4.35 - self.clearance:
-           return True
-       else:
-           return False
+        if position[0] > 3.5 - self.clearance and position[0] < 18.5 + self.clearance and position[
+            1] < 58.5 + self.clearance and position[1] > 43.5 - self.clearance:
+            return True
+        else:
+            return False
 
-    # Check if node is in middle right square using half planes
+        # Check if node is in middle right square using half planes
+
     def insideSquare3(self, position):
-       if position[0] > 8.35 - self.clearance and position[0] < 9.85 + self.clearance and position[1] < 5.85 + self.clearance and position[1] > 4.35 - self.clearance:
-           return True
-       else:
-           return False
+        if position[0] > 83.5 - self.clearance and position[0] < 98.5 + self.clearance and position[
+            1] < 58.5 + self.clearance and position[1] > 43.5 - self.clearance:
+            return True
+        else:
+            return False
 
-     # Check if node is outside of map using half planes
+        # Check if node is outside of map using half planes
+
     def outsideMap(self, position):
-       if position[0] < .1 + self.clearance or position[0] > 10.1 - self.clearance or position[1] > 10.1 - self.clearance or position[1] < .1 + self.clearance:
-           return True
-       else:
-           return False
+        if position[0] > 1.0 + self.clearance and position[0] < 101.0 - self.clearance and position[
+            1] < 101.0 - self.clearance and position[1] > 1.0 + self.clearance:
+            return False
+        else:
+            return True
 
     # Check if position is inside map or inside an object
     def possiblePostion(self, position):
@@ -115,7 +127,8 @@ class Environment:
             possiblity = False
         return possiblity
 
-    # Check if each action is possible
+        # Check if each action is possible
+
     def possibleMoves(self, start, node, stepSize):
         actions = []
         temp = self.move(start, '1', stepSize, node)
@@ -133,77 +146,119 @@ class Environment:
         temp = self.move(start, '5', stepSize, node)
         if temp is not None:
             actions.append(temp)
+        temp = self.move(start, '6', stepSize, node)
+        if temp is not None:
+            actions.append(temp)
+        temp = self.move(start, '7', stepSize, node)
+        if temp is not None:
+            actions.append(temp)
+        temp = self.move(start, '8', stepSize, node)
+        if temp is not None:
+            actions.append(temp)
         return actions
-
     # Move robot position according to action
     def move(self, start, val, stepSize, node):
         temp = None
         if val == '1':
-            angle = self.currentPosition[2] + 60
-            angle = self.angleCheck(angle)
             tempBoolean = True
-            for i in range(stepSize):
-                x = self.currentPosition[0] + i * cos(radians(angle))
-                y = self.currentPosition[1] + i * sin(radians(angle))
+            x = self.currentPosition[0]
+            y = self.currentPosition[1]
+            theta = self.currentPosition[2]
+            for i in range(100):
+                x, y, theta = self.increment(x, y, theta, 0, stepSize[1])
                 if not self.possiblePostion([x, y]):
                     tempBoolean = False
             if tempBoolean:
-                x = self.currentPosition[0] + stepSize * cos(radians(angle))
-                y = self.currentPosition[1] + stepSize * sin(radians(angle))
-                temp = Node(start, [x, y, angle], node.goal, stepSize, node)
+                temp = Node(start, [x, y, theta], node.goal, stepSize, node, val)
         if val == '2':
-            angle = self.currentPosition[2] + 30
-            angle = self.angleCheck(angle)
             tempBoolean = True
-            for i in range(stepSize):
-                x = self.currentPosition[0] + i * cos(radians(angle))
-                y = self.currentPosition[1] + i * sin(radians(angle))
+            x = self.currentPosition[0]
+            y = self.currentPosition[1]
+            theta = self.currentPosition[2]
+            for i in range(100):
+                x, y, theta = self.increment(x, y, theta, stepSize[0], stepSize[1])
                 if not self.possiblePostion([x, y]):
                     tempBoolean = False
             if tempBoolean:
-                x = self.currentPosition[0] + stepSize * cos(radians(angle))
-                y = self.currentPosition[1] + stepSize * sin(radians(angle))
-                temp = Node(start, [x, y, angle], node.goal, stepSize, node)
+                temp = Node(start, [x, y, theta], node.goal, stepSize, node, val)
         if val == '3':
-            angle = self.currentPosition[2]
-            angle = self.angleCheck(angle)
             tempBoolean = True
-            for i in range(stepSize):
-                x = self.currentPosition[0] + i * cos(radians(angle))
-                y = self.currentPosition[1] + i * sin(radians(angle))
+            x = self.currentPosition[0]
+            y = self.currentPosition[1]
+            theta = self.currentPosition[2]
+            for i in range(100):
+                x, y, theta = self.increment(x, y, theta, stepSize[1], stepSize[1])
                 if not self.possiblePostion([x, y]):
                     tempBoolean = False
             if tempBoolean:
-                x = self.currentPosition[0] + stepSize * cos(radians(angle))
-                y = self.currentPosition[1] + stepSize * sin(radians(angle))
-                temp = Node(start, [x, y, angle], node.goal, stepSize, node)
+                temp = Node(start, [x, y, theta], node.goal, stepSize, node, val)
         if val == '4':
-            angle = self.currentPosition[2] - 30
-            angle = self.angleCheck(angle)
             tempBoolean = True
-            for i in range(stepSize):
-                x = self.currentPosition[0] + i * cos(radians(angle))
-                y = self.currentPosition[1] + i * sin(radians(angle))
+            x = self.currentPosition[0]
+            y = self.currentPosition[1]
+            theta = self.currentPosition[2]
+            for i in range(100):
+                x, y, theta = self.increment(x, y, theta, stepSize[1], stepSize[0])
                 if not self.possiblePostion([x, y]):
                     tempBoolean = False
             if tempBoolean:
-                x = self.currentPosition[0] + stepSize * cos(radians(angle))
-                y = self.currentPosition[1] + stepSize * sin(radians(angle))
-                temp = Node(start, [x, y, angle], node.goal, stepSize, node)
+                temp = Node(start, [x, y, theta], node.goal, stepSize, node, val)
         if val == '5':
-            angle = self.currentPosition[2] - 60
-            angle = self.angleCheck(angle)
             tempBoolean = True
-            for i in range(stepSize):
-                x = self.currentPosition[0] + i * cos(radians(angle))
-                y = self.currentPosition[1] + i * sin(radians(angle))
+            x = self.currentPosition[0]
+            y = self.currentPosition[1]
+            theta = self.currentPosition[2]
+            for i in range(100):
+                x, y, theta = self.increment(x, y, theta, stepSize[1], 0)
                 if not self.possiblePostion([x, y]):
                     tempBoolean = False
             if tempBoolean:
-                x = self.currentPosition[0] + stepSize * cos(radians(angle))
-                y = self.currentPosition[1] + stepSize * sin(radians(angle))
-                temp = Node(start, [x, y, angle], node.goal, stepSize, node)
+                temp = Node(start, [x, y, theta], node.goal, stepSize, node, val)
+        if val == '6':
+            tempBoolean = True
+            x = self.currentPosition[0]
+            y = self.currentPosition[1]
+            theta = self.currentPosition[2]
+            for i in range(100):
+                x, y, theta = self.increment(x, y, theta, 0, stepSize[0])
+                if not self.possiblePostion([x, y]):
+                    tempBoolean = False
+            if tempBoolean:
+                temp = Node(start, [x, y, theta], node.goal, stepSize, node, val)
+        if val == '7':
+            tempBoolean = True
+            x = self.currentPosition[0]
+            y = self.currentPosition[1]
+            theta = self.currentPosition[2]
+            for i in range(100):
+                x, y, theta = self.increment(x, y, theta, stepSize[0], stepSize[0])
+                if not self.possiblePostion([x, y]):
+                    tempBoolean = False
+            if tempBoolean:
+                temp = Node(start, [x, y, theta], node.goal, stepSize, node, val)
+        if val == '8':
+            tempBoolean = True
+            x = self.currentPosition[0]
+            y = self.currentPosition[1]
+            theta = self.currentPosition[2]
+            for i in range(100):
+                x, y, theta = self.increment(x, y, theta, stepSize[0], 0)
+                if not self.possiblePostion([x, y]):
+                    tempBoolean = False
+            if tempBoolean:
+                temp = Node(start, [x, y, theta], node.goal, stepSize, node, val)
         return temp
+
+    def increment(self, x, y, theta, rpm1, rpm2):
+        r = 0.033
+        l = 0.160
+        rpm1 /= 10
+        rpm2 /= 10
+        x += r / 2 * (rpm1 + rpm2) * cos(radians(theta))
+        y += r / 2 * (rpm1 + rpm2) * sin(radians(theta))
+        theta += r / l * (rpm1 - rpm2)
+        theta = self.angleCheck(theta)
+        return x, y, theta
 
     # Keep angle value from 0 to 360
     def angleCheck(self, angle):
