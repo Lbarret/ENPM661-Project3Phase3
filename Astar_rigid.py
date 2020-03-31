@@ -12,8 +12,8 @@ height, width = 102 * multiplier, 102 * multiplier
 count = 0
 
 # Get input from user
-radius = int(input("Enter radius: "))
-clearance = int(input("Enter Clearance: "))
+radius = int(float(input("Enter radius: "))*10)
+clearance = int(float(input("Enter Clearance: "))*10)
 clearance += radius
 coordinates = []
 env = Environment([0, 0], clearance)
