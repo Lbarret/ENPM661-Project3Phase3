@@ -43,7 +43,7 @@ python Astar_rigid.py
 
 #### Runtime
 
-It takes approximately 4 seconds for start: (0.8,0.8,30), goal: (9.2, 9.2), radius: 0.2, clearance: 0.2, RPM1: 50 and RPM2:25.
+It takes approximately 4 seconds for start: (-4.2,-4.2,30), goal: (4.2, 4.2), radius: 0.2, clearance: 0.2, RPM1: 50 and RPM2:25.
 
 System configuration- 
 - CPU: Intel Core i7-9750H @3.9 GHz x12

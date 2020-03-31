@@ -27,8 +27,8 @@ while startBool:
     startPos[1] = input("y: ")
     startPos[2] = input("theta: ")
     # Check to see if input is valid
-    if env.possiblePostion([int(float(startPos[0])*10), int(float(startPos[1])*10)]):
-        coordinates.append([int(float(startPos[0])*10) * multiplier, (102 - int(float(startPos[1])*10)) * multiplier, int(startPos[2])])
+    if env.possiblePostion([int((float(startPos[0])+5.1)*10), int((float(startPos[1])+5.1)*10)]):
+        coordinates.append([int((float(startPos[0])+5.1)*10) * multiplier, (102 - int((float(startPos[1])+5.1)*10)) * multiplier, int(startPos[2])])
         count += 1
         startBool = False
     else:
@@ -41,8 +41,8 @@ while goalBool:
     goalPos[1] = input("y: ")
 
     # Check to see if input is valid
-    if env.possiblePostion([int(float(goalPos[0])*10), int(float(goalPos[1])*10)]):
-        coordinates.append([int(float(goalPos[0])*10) * multiplier, (102 - int(float(goalPos[1])*10)) * multiplier])
+    if env.possiblePostion([int((float(goalPos[0])+5.1)*10), int((float(goalPos[1])+5.1)*10)]):
+        coordinates.append([int((float(goalPos[0])+5.1)*10) * multiplier, (102 - int((float(goalPos[1])+5.1)*10)) * multiplier])
         count += 1
         goalBool = False
     else:
@@ -175,22 +175,17 @@ def drawCurve(i, color, list, stroke):
 
 if len(solution) == 3:
     print("Unreachable goal.")
-    for i in range(1, len(solution[2])):
-        drawCurve(i, (255, 255, 255), solution[2], 2)
+    search = solution[2]
+    for i in range(0, len(search) - 1):
+        pygame.event.get()
+        drawCurve(i, (255, 255, 255), search, 2)
     drawEnv()
     pygame.display.flip()
 else:
     path, search = solution[0], solution[1]
-    path, search = solution[0], solution[1]
-    # for i in range(1, len(search)):
-    #     drawArrow(i, (255, 255, 255), search, 1)
-    # draw()
-    # pygame.display.flip()
     for i in range(0, len(search) - 1):
         pygame.event.get()
         drawCurve(i, (255, 255, 255), search, 2)
-        # pygame.display.flip()
-        # clock.tick(ticks)
     drawEnv()
     pygame.display.flip()
     for i in range(0, len(path) - 1):
