@@ -1,5 +1,6 @@
 import os
 from time import time
+
 from AStar import AStar
 from Mechanism import Environment
 
@@ -12,8 +13,8 @@ height, width = 102 * multiplier, 102 * multiplier
 count = 0
 
 # Get input from user
-radius = int(float(input("Enter radius: "))*10)
-clearance = int(float(input("Enter Clearance: "))*10)
+radius = int(float(input("Enter radius: ")) * 10)
+clearance = int(float(input("Enter Clearance: ")) * 10)
 clearance += radius
 coordinates = []
 env = Environment([0, 0], clearance)
@@ -27,8 +28,9 @@ while startBool:
     startPos[1] = input("y: ")
     startPos[2] = input("theta: ")
     # Check to see if input is valid
-    if env.possiblePostion([int((float(startPos[0])+5.1)*10), int((float(startPos[1])+5.1)*10)]):
-        coordinates.append([int((float(startPos[0])+5.1)*10) * multiplier, (102 - int((float(startPos[1])+5.1)*10)) * multiplier, int(startPos[2])])
+    if env.possiblePostion([int((float(startPos[0]) + 5.1) * 10), int((float(startPos[1]) + 5.1) * 10)]):
+        coordinates.append([int((float(startPos[0]) + 5.1) * 10) * multiplier,
+                            (102 - int((float(startPos[1]) + 5.1) * 10)) * multiplier, int(startPos[2])])
         count += 1
         startBool = False
     else:
@@ -41,14 +43,15 @@ while goalBool:
     goalPos[1] = input("y: ")
 
     # Check to see if input is valid
-    if env.possiblePostion([int((float(goalPos[0])+5.1)*10), int((float(goalPos[1])+5.1)*10)]):
-        coordinates.append([int((float(goalPos[0])+5.1)*10) * multiplier, (102 - int((float(goalPos[1])+5.1)*10)) * multiplier])
+    if env.possiblePostion([int((float(goalPos[0]) + 5.1) * 10), int((float(goalPos[1]) + 5.1) * 10)]):
+        coordinates.append([int((float(goalPos[0]) + 5.1) * 10) * multiplier,
+                            (102 - int((float(goalPos[1]) + 5.1) * 10)) * multiplier])
         count += 1
         goalBool = False
     else:
         print("Invalid position.")
 # Get step size
-stepSize = [0,0]
+stepSize = [0, 0]
 print("Enter RPM size: ")
 stepSize[0] = int(input("RPM1: "))
 stepSize[1] = int(input("RPM2: "))
@@ -70,8 +73,6 @@ pygame.font.init()
 myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
 ticks = 40
 clock = pygame.time.Clock()
-
-
 
 
 # Draw environment
@@ -134,12 +135,14 @@ def drawEnv():
     pygame.display.flip()
     clock.tick(ticks)
 
+
 r = 0.033
 l = 0.160
 
 
 def drawPoint(x, y, color, size):
-    pygame.draw.rect(display, color, pygame.Rect([x, height - y, size,size]))
+    pygame.draw.rect(display, color, pygame.Rect([x, height - y, size, size]))
+
 
 def draw(x, y, theta, rpm1, rpm2, color, stroke):
     rpm1 /= 10
@@ -151,41 +154,68 @@ def draw(x, y, theta, rpm1, rpm2, color, stroke):
         drawPoint(x * multiplier, y * multiplier, color, stroke)
     return x, y, theta
 
+
 # Draw arrow
 def drawCurve(i, color, list, stroke):
+    if list[i + 1].action == "1":
+        draw(list[i].env[0], list[i].env[1], list[i].env[2], 0, stepSize[1], color, stroke)
+    if list[i + 1].action == "2":
+        draw(list[i].env[0], list[i].env[1], list[i].env[2], stepSize[0], stepSize[1], color, stroke)
+    if list[i + 1].action == "3":
+        draw(list[i].env[0], list[i].env[1], list[i].env[2], stepSize[1], stepSize[1], color, stroke)
+    if list[i + 1].action == "4":
+        draw(list[i].env[0], list[i].env[1], list[i].env[2], stepSize[1], stepSize[0], color, stroke)
+    if list[i + 1].action == "5":
+        draw(list[i].env[0], list[i].env[1], list[i].env[2], stepSize[1], 0, color, stroke)
+    if list[i + 1].action == "6":
+        draw(list[i].env[0], list[i].env[1], list[i].env[2], 0, stepSize[0], color, stroke)
+    if list[i + 1].action == "7":
+        draw(list[i].env[0], list[i].env[1], list[i].env[2], stepSize[0], stepSize[0], color, stroke)
+    if list[i + 1].action == "8":
+        draw(list[i].env[0], list[i].env[1], list[i].env[2], stepSize[0], 0, color, stroke)
 
-    if list[i+1].action == "1":
-        draw(list[i].env[0], list[i].env[1], list[i].env[2],0, stepSize[1], color, stroke)
-    if list[i+1].action == "2":
-        draw(list[i].env[0], list[i].env[1], list[i].env[2],stepSize[0], stepSize[1], color, stroke)
-    if list[i+1].action == "3":
-        draw(list[i].env[0], list[i].env[1], list[i].env[2],stepSize[1], stepSize[1], color, stroke)
-    if list[i+1].action == "4":
-        draw(list[i].env[0], list[i].env[1], list[i].env[2],stepSize[1], stepSize[0], color, stroke)
-    if list[i+1].action == "5":
-        draw(list[i].env[0], list[i].env[1], list[i].env[2],stepSize[1], 0, color, stroke)
-    if list[i+1].action == "6":
-        draw(list[i].env[0], list[i].env[1], list[i].env[2],0, stepSize[0], color, stroke)
-    if list[i+1].action == "7":
-        draw(list[i].env[0], list[i].env[1], list[i].env[2],stepSize[0], stepSize[0], color, stroke)
-    if list[i+1].action == "8":
-        draw(list[i].env[0], list[i].env[1], list[i].env[2],stepSize[0], 0, color, stroke)
 
+def drawCurveSearch(env, action, color, stroke):
+    if action == "1":
+        draw(env[0], env[1], env[2], 0, stepSize[1], color, stroke)
+    if action == "2":
+        draw(env[0], env[1], env[2], stepSize[0], stepSize[1], color, stroke)
+    if action == "3":
+        draw(env[0], env[1], env[2], stepSize[1], stepSize[1], color, stroke)
+    if action == "4":
+        draw(env[0], env[1], env[2], stepSize[1], stepSize[0], color, stroke)
+    if action == "5":
+        draw(env[0], env[1], env[2], stepSize[1], 0, color, stroke)
+    if action == "6":
+        draw(env[0], env[1], env[2], 0, stepSize[0], color, stroke)
+    if action == "7":
+        draw(env[0], env[1], env[2], stepSize[0], stepSize[0], color, stroke)
+    if action == "8":
+        draw(env[0], env[1], env[2], stepSize[0], 0, color, stroke)
+
+
+def animateSearch(search):
+    divider = int(len(search)/10)
+    for i in range(len(search)):
+        for action in search[i][1]:
+            drawCurveSearch(search[i][0].env, action.action, (255, 255, 255), 2)
+            if i < divider:
+                drawEnv()
+                pygame.display.flip()
+        if i%divider == 0:
+            drawEnv()
+            pygame.display.flip()
 
 
 if len(solution) == 3:
     print("Unreachable goal.")
     search = solution[2]
-    for i in range(0, len(search) - 1):
-        pygame.event.get()
-        drawCurve(i, (255, 255, 255), search, 2)
+    animateSearch(search)
     drawEnv()
     pygame.display.flip()
 else:
     path, search = solution[0], solution[1]
-    for i in range(0, len(search) - 1):
-        pygame.event.get()
-        drawCurve(i, (255, 255, 255), search, 2)
+    animateSearch(search)
     drawEnv()
     pygame.display.flip()
     for i in range(0, len(path) - 1):

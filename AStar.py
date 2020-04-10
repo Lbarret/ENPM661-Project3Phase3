@@ -19,7 +19,6 @@ class AStar:
         CurrentNode = Node(self.start, self.start, self.goal, self.stepSize)
         NodeList = [CurrentNode]
         NodeDict = {tuple(CurrentNode.env)}
-        search.append(CurrentNode)
         # Check if the current node is the goal node
         while sqrt((CurrentNode.env[0] - self.goal[0]) ** 2 + (CurrentNode.env[1] - self.goal[1]) ** 2) > 1.5:
 
@@ -30,12 +29,12 @@ class AStar:
 
                 Course = Environment(CurrentNode.env, self.clearance)
                 # Check all of the possible actions
-                for action in Course.possibleMoves(self.start, CurrentNode, self.stepSize):
-
+                actions = Course.possibleMoves(self.start, CurrentNode, self.stepSize)
+                for action in actions:
+                    search.append([CurrentNode, actions])
                     # Search dictonary and add node to list and dictionary if it hasn't been explored yet
                     if tuple((int(action.env[0]), int(action.env[1]), action.env[2])) not in NodeDict:
                         NodeList.append(action)
-                        search.append(action)
                         NodeDict.add(tuple((int(action.env[0]), int(action.env[1]), action.env[2])))
                 # Sort list of nodes based on cost
                 NodeList.sort(key=lambda x: x.weight, reverse=True)
